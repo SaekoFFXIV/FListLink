@@ -1,0 +1,31 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - name: Install Dalamud development files
+        shell: pwsh
+        run: |
+          Invoke-WebRequest https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile latest.zip
+          Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
+      - name: Run parser tests
+        run: dotnet run --project tests/FListLink.ParserTests -c Release
+      - name: Build plugin
+        run: dotnet build FListLink.sln -c Release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FListLink
+          path: FListLink/bin/x64/Release/FListLink/latest.zip
+          if-no-files-found: error
+          retention-days: 7
