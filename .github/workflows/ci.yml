@@ -23,7 +23,7 @@ jobs:
         run: dotnet run --project tests/FListLink.ParserTests -c Release
       - name: Build plugin
         run: dotnet build FListLink.sln -c Release
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: FListLink
           path: FListLink/bin/x64/Release/FListLink/latest.zip
