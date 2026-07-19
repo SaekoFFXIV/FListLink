@@ -15,7 +15,7 @@ A Dalamud plugin that opens F-list profiles advertised in nearby players' FFXIV 
 Add this URL under Dalamud Settings > Experimental > Custom Plugin Repositories:
 
 ```text
-https://raw.githubusercontent.com/kaitFFXIV/DalamudPlugins/main/repo.json
+https://raw.githubusercontent.com/SaekoFFXIV/DalamudPlugins/main/repo.json
 ```
 
 Then search for **F-List Link** in the Dalamud Plugin Installer.
