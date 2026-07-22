@@ -1,4 +1,4 @@
-using FListLink;
+using EasySocialMediaPlugin;
 
 var cases = new[]
 {

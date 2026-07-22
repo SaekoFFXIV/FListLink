@@ -1,0 +1,12 @@
+{
+  "Author": "Kait",
+  "Name": "Easy Social Media Plugin",
+  "Punchline": "Open F-list and X profiles advertised in player search comments.",
+  "Description": "Draws buttons beside the Adventurer Plate and Examine windows that open F-list (/c/ marker) and X (@handle) profiles found in a player's search comment. Also adds an Open F-list Profile context-menu action and the /social command for your current target. A standalone /c/, /c, or c/ marker uses the player's FFXIV name; c/<name> accepts letters, underscores, and hyphens.",
+  "ApplicableVersion": "any",
+  "Tags": [
+    "utility",
+    "social",
+    "profile"
+  ]
+}

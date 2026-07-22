@@ -13,11 +13,11 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 
-namespace FListLink;
+namespace EasySocialMediaPlugin;
 
 public sealed class Plugin : IDalamudPlugin
 {
-    private const string CommandName = "/flink";
+    private const string CommandName = "/social";
     private static readonly TimeSpan LookupTimeout = TimeSpan.FromSeconds(10);
 
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
@@ -61,7 +61,7 @@ public sealed class Plugin : IDalamudPlugin
     {
         if (TargetManager.Target is not IPlayerCharacter player)
         {
-            ChatGui.PrintError("F-List Link: Target a nearby player first.");
+            ChatGui.PrintError("Easy Social Media: Target a nearby player first.");
             return;
         }
 
@@ -70,7 +70,7 @@ public sealed class Plugin : IDalamudPlugin
 
     private void ShowUsage()
     {
-        ChatGui.Print("F-List Link: Target a nearby player and use /flink, or right-click them and choose Open F-list Profile.");
+        ChatGui.Print("Easy Social Media: Target a nearby player and use /social, or right-click them and choose Open F-list Profile.");
     }
 
     private void OnMenuOpened(IMenuOpenedArgs args)
@@ -99,13 +99,13 @@ public sealed class Plugin : IDalamudPlugin
         var inspectAgent = AgentInspect.Instance();
         if (inspectAgent == null)
         {
-            ChatGui.PrintError("F-List Link: The character inspection service is unavailable.");
+            ChatGui.PrintError("Easy Social Media: The character inspection service is unavailable.");
             return;
         }
 
         pendingLookup = new PendingLookup(entityId, playerName, DateTime.UtcNow);
         inspectAgent->ExamineCharacter(entityId);
-        ChatGui.Print($"F-List Link: Checking {playerName}'s search comment...");
+        ChatGui.Print($"Easy Social Media: Checking {playerName}'s search comment...");
     }
 
     private unsafe void OnFrameworkUpdate(IFramework framework)
@@ -118,7 +118,7 @@ public sealed class Plugin : IDalamudPlugin
         if (DateTime.UtcNow - pending.StartedAt > LookupTimeout)
         {
             pendingLookup = null;
-            ChatGui.PrintError($"F-List Link: Timed out reading {pending.PlayerName}'s search comment.");
+            ChatGui.PrintError($"Easy Social Media: Timed out reading {pending.PlayerName}'s search comment.");
             return;
         }
 
@@ -131,7 +131,7 @@ public sealed class Plugin : IDalamudPlugin
         if (inspectAgent->FetchSearchCommentStatus == 3)
         {
             pendingLookup = null;
-            ChatGui.PrintError($"F-List Link: Could not read {pending.PlayerName}'s search comment.");
+            ChatGui.PrintError($"Easy Social Media: Could not read {pending.PlayerName}'s search comment.");
             return;
         }
 
@@ -145,7 +145,7 @@ public sealed class Plugin : IDalamudPlugin
 
         if (!FListProfileResolver.TryResolve(searchComment, pending.PlayerName, out var url))
         {
-            ChatGui.PrintError($"F-List Link: {pending.PlayerName}'s search comment does not contain /c/, /c, or c/<name>.");
+            ChatGui.PrintError($"Easy Social Media: {pending.PlayerName}'s search comment does not contain /c/, /c, or c/<name>.");
             return;
         }
 
@@ -240,7 +240,7 @@ public sealed class Plugin : IDalamudPlugin
             ImGuiWindowFlags.NoFocusOnAppearing |
             ImGuiWindowFlags.NoNav;
 
-        if (ImGui.Begin($"##FListLink-{id}", flags))
+        if (ImGui.Begin($"##EasySocialMediaPlugin-{id}", flags))
         {
             foreach (var (label, url) in links)
             {
@@ -258,13 +258,13 @@ public sealed class Plugin : IDalamudPlugin
     {
         try
         {
-            ChatGui.Print($"F-List Link: Opening {url}");
+            ChatGui.Print($"Easy Social Media: Opening {url}");
             Util.OpenLink(url);
         }
         catch (Exception exception)
         {
-            Log.Error(exception, "Failed to open F-list URL {Url}", url);
-            ChatGui.PrintError("F-List Link: Windows could not open the profile URL.");
+            Log.Error(exception, "Failed to open social media URL {Url}", url);
+            ChatGui.PrintError("Easy Social Media: Windows could not open the profile URL.");
         }
     }
 

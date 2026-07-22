@@ -21,11 +21,11 @@ jobs:
           Invoke-WebRequest https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile latest.zip
           Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
       - name: Run parser tests
-        run: dotnet run --project tests/FListLink.ParserTests -c Release
+        run: dotnet run --project tests/EasySocialMediaPlugin.ParserTests -c Release
       - name: Build plugin
-        run: dotnet build FListLink.sln -c Release
+        run: dotnet build EasySocialMediaPlugin.sln -c Release
       - name: Publish GitHub release
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create $env:GITHUB_REF_NAME "FListLink/bin/x64/Release/FListLink/latest.zip" --title "F-List Link $env:GITHUB_REF_NAME" --generate-notes
+        run: gh release create $env:GITHUB_REF_NAME "EasySocialMediaPlugin/bin/x64/Release/EasySocialMediaPlugin/latest.zip" --title "Easy Social Media Plugin $env:GITHUB_REF_NAME" --generate-notes

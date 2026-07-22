@@ -6,6 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\FListLink\FListProfileResolver.cs" Link="FListProfileResolver.cs" />
+    <Compile Include="..\..\EasySocialMediaPlugin\FListProfileResolver.cs" Link="FListProfileResolver.cs" />
   </ItemGroup>
 </Project>

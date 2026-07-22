@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using System;
 
-namespace FListLink;
+namespace EasySocialMediaPlugin;
 
 internal static partial class FListProfileResolver
 {
