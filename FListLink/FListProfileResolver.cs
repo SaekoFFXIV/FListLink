@@ -20,12 +20,13 @@ internal static partial class FListProfileResolver
     public static bool TryResolve(string searchComment, string playerName, out string url)
     {
         url = string.Empty;
+        var normalizedName = playerName.Replace("'", "");
 
         var explicitMatch = ExplicitProfileRegex().Match(searchComment);
         if (explicitMatch.Success)
         {
             var explicitName = DecodeOnce(explicitMatch.Groups["name"].Value);
-            url = BuildUrl(explicitName);
+            url = BuildUrl(explicitName.Length >= 6 ? explicitName : normalizedName);
             return true;
         }
 
@@ -34,7 +35,7 @@ internal static partial class FListProfileResolver
             return false;
         }
 
-        url = BuildUrl(playerName);
+        url = BuildUrl(normalizedName);
         return true;
     }
 

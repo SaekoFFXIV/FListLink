@@ -4,8 +4,8 @@ var cases = new[]
 {
     new TestCase("/c/", "Jane Doe", true, "https://f-list.net/c/Jane%20Doe"),
     new TestCase("RP profile: /c", "Jane Doe", true, "https://f-list.net/c/Jane%20Doe"),
-    new TestCase("visit c/Foo", "Jane Doe", true, "https://f-list.net/c/Foo"),
-    new TestCase("visit /c/Foo", "Jane Doe", true, "https://f-list.net/c/Foo"),
+    new TestCase("visit c/Foo", "Jane Doe", true, "https://f-list.net/c/Jane%20Doe"),
+    new TestCase("visit /c/Foo", "Jane Doe", true, "https://f-list.net/c/Jane%20Doe"),
     new TestCase("visit c/Foo_Bar", "Jane Doe", true, "https://f-list.net/c/Foo_Bar"),
     new TestCase("visit /c/Foo-Bar", "Jane Doe", true, "https://f-list.net/c/Foo-Bar"),
     new TestCase("https://f-list.net/c/Foo%20Bar", "Jane Doe", true, "https://f-list.net/c/Jane%20Doe"),
@@ -15,6 +15,8 @@ var cases = new[]
     new TestCase("/c/ RP-friendly", "Jane Doe", true, "https://f-list.net/c/Jane%20Doe"),
     new TestCase("No profile marker here", "Jane Doe", false, string.Empty),
     new TestCase("abc/c/not-a-marker", "Jane Doe", false, string.Empty),
+    new TestCase("/c/", "B'eta Hera", true, "https://f-list.net/c/Beta%20Hera"),
+    new TestCase("RP profile: /c", "N'arita Tia", true, "https://f-list.net/c/Narita%20Tia"),
 };
 
 var failures = 0;

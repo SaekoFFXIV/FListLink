@@ -10,6 +10,7 @@ using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace FListLink;
@@ -168,35 +169,56 @@ public sealed class Plugin : IDalamudPlugin
 
         var playerName = agent->Data->Name.ToString();
         var searchComment = agent->Data->SearchComment.ToString();
-        if (FListProfileResolver.TryResolve(searchComment, playerName, out var url))
-        {
-            DrawAnchoredButton(addon, "CharaCard", url);
-        }
+        DrawLinkButtons(addon, "CharaCard", searchComment, playerName);
     }
 
     private unsafe void DrawInspectButton()
     {
         var addon = GameGui.GetAddonByName<AtkUnitBase>("CharacterInspect");
         var agent = AgentInspect.Instance();
-        if (!IsAddonVisible(addon) ||
-            agent == null ||
-            agent->FetchSearchCommentStatus != 2 ||
-            ObjectTable.SearchByEntityId(agent->CurrentEntityId) is not IPlayerCharacter player)
+        if (!IsAddonVisible(addon) || agent == null)
         {
             return;
         }
 
         var searchComment = agent->SearchComment.ToString();
-        if (FListProfileResolver.TryResolve(searchComment, player.Name.TextValue, out var url))
+        if (string.IsNullOrEmpty(searchComment))
         {
-            DrawAnchoredButton(addon, "CharacterInspect", url);
+            return;
+        }
+
+        if (ObjectTable.SearchByEntityId(agent->CurrentEntityId) is not IPlayerCharacter player)
+        {
+            return;
+        }
+
+        DrawLinkButtons(addon, "CharacterInspect", searchComment, player.Name.TextValue);
+    }
+
+    private unsafe void DrawLinkButtons(AtkUnitBase* addon, string id, string searchComment, string playerName)
+    {
+        var links = new List<(string Label, string Url)>();
+
+        if (FListProfileResolver.TryResolve(searchComment, playerName, out var flistUrl))
+        {
+            links.Add(("F-list ↗", flistUrl));
+        }
+
+        if (TwitterResolver.TryResolve(searchComment, out var twitterUrl))
+        {
+            links.Add(("X ↗", twitterUrl));
+        }
+
+        if (links.Count > 0)
+        {
+            DrawAnchoredButtons(addon, id, links);
         }
     }
 
     private static unsafe bool IsAddonVisible(AtkUnitBase* addon) =>
         addon != null && addon->IsReady && addon->IsVisible;
 
-    private unsafe void DrawAnchoredButton(AtkUnitBase* addon, string id, string url)
+    private unsafe void DrawAnchoredButtons(AtkUnitBase* addon, string id, List<(string Label, string Url)> links)
     {
         const float estimatedWidth = 78f;
         const float gap = 6f;
@@ -218,9 +240,15 @@ public sealed class Plugin : IDalamudPlugin
             ImGuiWindowFlags.NoFocusOnAppearing |
             ImGuiWindowFlags.NoNav;
 
-        if (ImGui.Begin($"##FListLink-{id}", flags) && ImGui.Button("F-list ↗"))
+        if (ImGui.Begin($"##FListLink-{id}", flags))
         {
-            OpenUrl(url);
+            foreach (var (label, url) in links)
+            {
+                if (ImGui.Button(label))
+                {
+                    OpenUrl(url);
+                }
+            }
         }
 
         ImGui.End();
